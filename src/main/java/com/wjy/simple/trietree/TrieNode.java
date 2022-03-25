@@ -17,6 +17,8 @@ public class TrieNode<T> {
     private int level;
     // 子节点
     private List<TrieNode<T>> childTrieNodeList;
+    // 是否结尾
+    private boolean endFlg;
 
     public TrieNode(T t) {
         this.t = t;
@@ -53,4 +55,11 @@ public class TrieNode<T> {
         return this.childTrieNodeList;
     }
 
+    public void setEndFlg(boolean flg) {
+        endFlg = flg;
+    }
+
+    public boolean getEndFlg() {
+        return endFlg;
+    }
 }

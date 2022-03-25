@@ -17,7 +17,8 @@ public class TrieTree<T> {
     // 在字典树中插入单词
     public TrieNode<T> insert(List<T> ls) {
         TrieNode temp = root;
-        for (T t : ls) {
+        for (int i = 0; i < ls.size(); i++) {
+            T t = ls.get(i);
             TrieNode childNode = temp.getChildNode(t);
             if (childNode == null) {
                 childNode = new TrieNode<>(t);
@@ -26,6 +27,10 @@ public class TrieTree<T> {
             // 访问次数+1
             childNode.addTraverseCnt();
             temp = childNode;
+            if (i == ls.size() - 1) {
+                // 最后一位，设置结束标记
+                childNode.setEndFlg(true);
+            }
         }
         return root;
     }
@@ -44,10 +49,24 @@ public class TrieTree<T> {
         }
         // 只需删除路径上的最后一个节点
         preNode.getChildTrieNodeList().remove(temp);
+        // TODO 删除后更新路线上的结束节点标记
     }
 
     // 检查字典树中是否完全包含单词
     public boolean search(List<T> ls) {
+        TrieNode temp = root;
+        for (T t : ls) {
+            TrieNode childNode = temp.getChildNode(t);
+            if (childNode == null) {
+                return false;
+            }
+            temp = childNode;
+        }
+        return temp.getEndFlg();
+    }
+
+    // 检查字典树中是否包含前缀
+    public boolean startWith(List<T> ls) {
         TrieNode temp = root;
         for (T t : ls) {
             TrieNode childNode = temp.getChildNode(t);
