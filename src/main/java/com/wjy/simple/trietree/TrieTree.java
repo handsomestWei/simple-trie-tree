@@ -2,6 +2,7 @@ package com.wjy.simple.trietree;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.BiFunction;
 
 /**
  * 字典树：利用字符串的公共前缀可以减少查询字符串的时间，能够最大限度的减少无谓的字符串比较，同时在查询的过程中不需要预知待查询字符串的长度，沿着字典树的边进行匹配，查询效率比较高。
@@ -100,6 +101,15 @@ public class TrieTree<T> {
         return ls;
     }
 
+    // 遍历字典树，返回字典序列表
+    public List<T> getTrieOrder(T defaultVal, BiFunction<T, T, T> combineFunc) {
+        TrieNode temp = root;
+        List<T> ls = new LinkedList<>();
+        travelTreeByBFS(temp, ls, defaultVal, combineFunc);
+        return ls;
+    }
+
+    // 深度优先，递归查询第k位单词
     private int findIndexByDFS(TrieNode<T> trieNode, List<T> ls, int index) {
         if (index == 0) {
             return index;
@@ -125,4 +135,22 @@ public class TrieTree<T> {
         }
         return index;
     }
+
+    // 广度优先，递归遍历字典树
+    private void travelTreeByBFS(TrieNode<T> trieNode, List<T> ls, T data, BiFunction<T, T, T> combineFunc) {
+        if (trieNode == null) {
+            return;
+        }
+        List<TrieNode<T>> childTrieNodeList = trieNode.getChildTrieNodeList();
+        // 跳过根节点
+        if (trieNode.getVal() != null) {
+            // 合并
+            data = combineFunc.apply(data, trieNode.getVal());
+            ls.add(data);
+        }
+        for (TrieNode<T> tempNode : childTrieNodeList) {
+            travelTreeByBFS(tempNode, ls, data, combineFunc);
+        }
+    }
+
 }
